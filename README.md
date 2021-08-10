@@ -1,1 +1,1 @@
-# catching-pokemon
+# Catching Pokémon
