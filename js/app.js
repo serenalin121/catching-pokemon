@@ -1,7 +1,7 @@
 /* 
    create character class and Game Class
         character class:
-            - name, displayTime, score
+            - name, displayTime, score v
             - if got caught, will disappear
         game class:
             - show characters randomly,
@@ -84,7 +84,7 @@ class Game {
   }
 
   gameOver() {
-    // enable start game button
+    button.disabled = false;
     // show final socre on the screen
   }
 }
