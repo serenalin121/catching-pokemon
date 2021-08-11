@@ -35,3 +35,8 @@ h2 {
 .hole:hover {
   /* means the player caugth the character */
 }
+
+img {
+  height: 150px;
+  width: 150px;
+}
