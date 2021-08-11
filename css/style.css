@@ -6,4 +6,10 @@ body {
   background-repeat: no-repeat;
   max-width: 100vw;
   min-height: 100vh;
+  font-family: "Oswald", sans-serif;
+}
+
+h1,
+h2 {
+  margin: 20px;
 }
