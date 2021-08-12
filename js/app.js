@@ -5,34 +5,64 @@
             - if got caught, will disappear
         game class:
             - show characters randomly,
-            - track score
+            - track score 
             - track time
+        Hole class:
+            - display image
+            - track collision
+
+    ------------------------
+    1. hole class - game class created hold objects
+    2. randomly display characters on the screen based on the display time
+        - make sure only one character per hole
+        - show setTimout timeout- hide
+    3. mouse collision detection
+    4. change mouse to a pokemon ball
 */
 
-const pokemons = [
+const characters = [
   {
     name: "pikachu",
-    displayTime: 2,
+    displayTimeInSeconds: 2,
     score: 1,
   },
   {
     name: "psyduck",
-    displayTime: 4,
+    displayTimeInSeconds: 4,
     score: 1,
   },
   {
     name: "eevee",
-    displayTime: 1,
+    displayTimeInSeconds: 1,
     score: 2,
+  },
+  {
+    name: "bomb",
+    displayTimeInSeconds: 2,
+    score: -1,
   },
 ];
 
 class Character {
-  constructor(name, displayTime, score) {
+  constructor(name, displayTimeInSeconds, score) {
     this.name = name;
-    this.displayTime = displayTime;
+    this.displayTimeInSeconds = displayTimeInSeconds;
     this.hasCaught = false;
     this.score = score;
+  }
+}
+
+class Hole {
+  constructor(num) {
+    this.num = num;
+  }
+  display(character) {
+    const hole = document.querySelector(`.hole${this.num} > .character`);
+    hole.removeAttribute("hidden");
+    hole.setAttribute("src", `images/${character.name}.png`);
+    setTimeout(() => {
+      hole.setAttribute("hidden", true);
+    }, `${character.displayTimeInSeconds}000`);
   }
 }
 
@@ -41,27 +71,39 @@ class Game {
     this.score = 0;
     this.gameTime = 10;
     this.timer = null;
+    this.character = null;
+    this.holes = new Array(18).fill().map((_, index) => new Hole(index));
+    console.log(this.holes);
+
     this.startGame();
   }
 
-  showCharacter() {
-    const character = setInterval(() => {
-      for (let pokemon of pokemons) {
+  createCharacter() {
+    const instantiate = setInterval(() => {
+      for (let character of characters) {
         const test = new Character(
-          pokemon.name,
-          pokemon.displayTime,
-          pokemon.score
+          character.name,
+          character.displayTimeInSeconds,
+          character.score
         );
-        console.log(test);
+        this.showCharacter(test);
       }
       if (this.gameTime === 0) {
-        clearInterval(character);
+        clearInterval(instantiate);
         return;
       }
     }, 1000);
   }
 
+  showCharacter(character) {
+    console.log(this.holes);
+    const randomNumber = Math.floor(Math.random() * 18) + 1;
+    const hole = this.holes[randomNumber];
+    hole.display(character);
+  }
+
   countDown() {
+    // make sure only one timer running at a time
     if (this.timer) {
       clearInterval(this.timer);
     }
@@ -79,7 +121,7 @@ class Game {
 
   startGame() {
     this.countDown();
-    this.showCharacter();
+    this.createCharacter();
     // disable start game button
   }
 
