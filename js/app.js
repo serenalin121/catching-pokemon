@@ -28,7 +28,7 @@ const characters = [
   },
   {
     name: "psyduck",
-    displayTimeInSeconds: 4,
+    displayTimeInSeconds: 3,
     score: 1,
   },
   {
@@ -116,8 +116,7 @@ class Game {
 
     this.timer = setInterval(() => {
       this.gameTime--;
-      console.log(this.gameTime);
-
+      document.querySelector(".time").innerText = this.gameTime;
       if (this.gameTime === 0) {
         clearInterval(this.timer);
         this.gameOver();
@@ -133,6 +132,7 @@ class Game {
 
   gameOver() {
     button.disabled = false;
+
     // show final socre on the screen
   }
 }
