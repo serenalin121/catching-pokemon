@@ -32,9 +32,9 @@ h2 {
   align-items: center;
 }
 
-.hole:hover {
-  /* means the player caugth the character */
-}
+/* .hole:hover {
+  means the player caugth the character
+} */
 
 img {
   height: 150px;

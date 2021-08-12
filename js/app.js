@@ -55,13 +55,19 @@ class Character {
 class Hole {
   constructor(num) {
     this.num = num;
+    this.isDisplaying = false;
   }
   display(character) {
+    if (this.isDisplaying) {
+      return;
+    }
     const hole = document.querySelector(`.hole${this.num} > .character`);
     hole.removeAttribute("hidden");
     hole.setAttribute("src", `images/${character.name}.png`);
+    this.isDisplaying = true;
     setTimeout(() => {
       hole.setAttribute("hidden", true);
+      this.isDisplaying = false;
     }, `${character.displayTimeInSeconds}000`);
   }
 }
@@ -73,7 +79,6 @@ class Game {
     this.timer = null;
     this.character = null;
     this.holes = new Array(18).fill().map((_, index) => new Hole(index));
-    console.log(this.holes);
 
     this.startGame();
   }
@@ -97,8 +102,9 @@ class Game {
 
   showCharacter(character) {
     console.log(this.holes);
-    const randomNumber = Math.floor(Math.random() * 18) + 1;
+    const randomNumber = Math.floor(Math.random() * 18);
     const hole = this.holes[randomNumber];
+    console.log(hole);
     hole.display(character);
   }
 
