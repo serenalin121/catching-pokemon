@@ -62,32 +62,37 @@ class Hole {
   constructor(num) {
     this.num = num;
     this.isDisplaying = false;
+    this.img = document.querySelector(`.hole${num} > .character`);
+    this.clickFunction = null;
   }
+
   display(character, game) {
     if (this.isDisplaying) {
       return;
     }
-    const img = document.querySelector(`.hole${this.num} > .character`);
-    img.removeAttribute("hidden");
-    img.setAttribute("src", `images/${character.name}.png`);
-    // hole.setAttribute("data-caught", `${character.name}`);
-    const clickFunction = (e) => {
+    this.img.removeAttribute("hidden");
+    this.img.setAttribute("src", `images/${character.name}.png`);
+
+    this.clickFunction = (e) => {
       e.preventDefault();
-      console.log(e);
       game.trackScore(character.score);
-      console.log(game.gameScore);
-      img.removeEventListener("click", clickFunction);
-      img.setAttribute("hidden", true);
+      this.img.removeEventListener("click", this.clickFunction);
+      this.img.setAttribute("hidden", true);
+      clearTimeout(clearImg);
     };
 
-    img.addEventListener("click", clickFunction);
+    this.img.addEventListener("click", this.clickFunction);
     this.isDisplaying = true;
-    setTimeout(() => {
-      img.setAttribute("hidden", true);
-      //   hole.removeAttribute("data-caught");
-      this.isDisplaying = false;
-      img.removeEventListener("click", clickFunction);
+
+    const clearImg = setTimeout(() => {
+      this.clearImg();
     }, `${character.displayTimeInSeconds}000`);
+  }
+
+  clearImg() {
+    this.img.setAttribute("hidden", true);
+    this.isDisplaying = false;
+    this.img.removeEventListener("click", this.clickFunction);
   }
 }
 
@@ -104,6 +109,11 @@ class Game {
 
   createCharacter() {
     const instantiate = setInterval(() => {
+      if (this.gameTime === 0) {
+        clearInterval(instantiate);
+        return;
+      }
+
       for (let character of characters) {
         const test = new Character(
           character.name,
@@ -111,10 +121,6 @@ class Game {
           character.score
         );
         this.showCharacter(test);
-      }
-      if (this.gameTime === 0) {
-        clearInterval(instantiate);
-        return;
       }
     }, 1000);
   }
@@ -154,6 +160,7 @@ class Game {
 
   gameOver() {
     button.disabled = false;
+    this.holes.forEach((hole) => hole.clearImg());
 
     // show final socre on the screen
   }
