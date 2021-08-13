@@ -18,6 +18,13 @@
         - show setTimout timeout- hide
     3. mouse collision detection
     4. change mouse to a pokemon ball
+
+
+    1. each hole attach div event listener
+    2. console.log event.target
+    3. if src attr === images
+
+
 */
 
 const characters = [
@@ -47,7 +54,6 @@ class Character {
   constructor(name, displayTimeInSeconds, score) {
     this.name = name;
     this.displayTimeInSeconds = displayTimeInSeconds;
-    this.hasCaught = false;
     this.score = score;
   }
 }
@@ -57,24 +63,37 @@ class Hole {
     this.num = num;
     this.isDisplaying = false;
   }
-  display(character) {
+  display(character, game) {
     if (this.isDisplaying) {
       return;
     }
-    const hole = document.querySelector(`.hole${this.num} > .character`);
-    hole.removeAttribute("hidden");
-    hole.setAttribute("src", `images/${character.name}.png`);
+    const img = document.querySelector(`.hole${this.num} > .character`);
+    img.removeAttribute("hidden");
+    img.setAttribute("src", `images/${character.name}.png`);
+    // hole.setAttribute("data-caught", `${character.name}`);
+    const clickFunction = (e) => {
+      e.preventDefault();
+      console.log(e);
+      game.trackScore(character.score);
+      console.log(game.gameScore);
+      img.removeEventListener("click", clickFunction);
+      img.setAttribute("hidden", true);
+    };
+
+    img.addEventListener("click", clickFunction);
     this.isDisplaying = true;
     setTimeout(() => {
-      hole.setAttribute("hidden", true);
+      img.setAttribute("hidden", true);
+      //   hole.removeAttribute("data-caught");
       this.isDisplaying = false;
+      img.removeEventListener("click", clickFunction);
     }, `${character.displayTimeInSeconds}000`);
   }
 }
 
 class Game {
   constructor() {
-    this.score = 0;
+    this.gameScore = 0;
     this.gameTime = 10;
     this.timer = null;
     this.character = null;
@@ -101,11 +120,9 @@ class Game {
   }
 
   showCharacter(character) {
-    console.log(this.holes);
     const randomNumber = Math.floor(Math.random() * 18);
     const hole = this.holes[randomNumber];
-    console.log(hole);
-    hole.display(character);
+    hole.display(character, this);
   }
 
   countDown() {
@@ -128,6 +145,11 @@ class Game {
     this.countDown();
     this.createCharacter();
     // disable start game button
+  }
+
+  trackScore(score) {
+    this.gameScore += score;
+    document.querySelector(".score").innerText = this.gameScore;
   }
 
   gameOver() {
