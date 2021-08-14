@@ -1,30 +1,9 @@
 /* 
-   create character class and Game Class
-        character class:
-            - name, displayTime, score v
-            - if got caught, will disappear
-        game class:
-            - show characters randomly,
-            - track score 
-            - track time
-        Hole class:
-            - display image
-            - track collision
+   - have a pop up window at the end of the game to show the final socre - modal
 
-    ------------------------
-    1. hole class - game class created hold objects
-    2. randomly display characters on the screen based on the display time
-        - make sure only one character per hole
-        - show setTimout timeout- hide
-    3. mouse collision detection
-    4. change mouse to a pokemon ball
-
-
-    1. each hole attach div event listener
-    2. console.log event.target
-    3. if src attr === images
-
-
+   - abra pokemon - special character, show up at the last 2s, displaytime really fast
+   - track what user has caught, and number of character
+   - restructure 
 */
 
 const characters = [
@@ -60,7 +39,6 @@ class Character {
 
 class Hole {
   constructor(num) {
-    this.num = num;
     this.isDisplaying = false;
     this.img = document.querySelector(`.hole${num} > .character`);
     this.clickFunction = null;
@@ -148,9 +126,9 @@ class Game {
   }
 
   startGame() {
+    document.querySelector(".score").innerText = 0;
     this.countDown();
     this.createCharacter();
-    // disable start game button
   }
 
   trackScore(score) {
