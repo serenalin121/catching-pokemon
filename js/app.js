@@ -54,6 +54,7 @@ class Hole {
     this.clickFunction = (e) => {
       e.preventDefault();
       game.trackScore(character.score);
+      game.showPoints(character.score);
       this.img.removeEventListener("click", this.clickFunction);
       this.img.setAttribute("hidden", true);
       clearTimeout(clearImg);
@@ -136,13 +137,21 @@ class Game {
     document.querySelector(".score").innerText = this.gameScore;
   }
 
+  showPoints(score) {
+    const showPoints = document.querySelector(".points");
+    showPoints.removeAttribute("hidden");
+    console.log(score);
+    showPoints.setAttribute("src", `./images/${score}.png`);
+
+    setTimeout(() => {
+      showPoints.setAttribute("hidden", true);
+    }, 400);
+  }
+
   gameOver() {
     button.disabled = false;
     this.holes.forEach((hole) => hole.clearImg());
     this.showModal();
-    // const modal = document.querySelector(".modal");
-    // modal.setAttribute("class", "show");
-    // show final socre on the screen
   }
 
   showModal() {

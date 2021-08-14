@@ -18,6 +18,11 @@ h2 {
   margin: 30px;
 }
 
+.points {
+  height: 30px;
+  width: 30px;
+  margin-top: -7px;
+}
 .details {
   display: flex;
   flex-direction: row;
