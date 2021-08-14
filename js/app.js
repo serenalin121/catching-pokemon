@@ -144,7 +144,7 @@ class Game {
   }
 }
 
-const button = document.querySelector("button");
+const button = document.querySelector(".gameButton");
 button.addEventListener("click", (e) => {
   e.preventDefault();
 
