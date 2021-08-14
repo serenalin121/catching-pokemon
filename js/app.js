@@ -6,7 +6,7 @@
    - restructure 
 */
 
-const characters = [
+const availableCharacters = [
   {
     name: "pikachu",
     displayTimeInSeconds: 2,
@@ -53,7 +53,7 @@ class Hole {
 
     this.clickFunction = (e) => {
       e.preventDefault();
-      game.trackScore(character.score);
+      game.trackScore(character.score, character.name);
       game.showPoints(character.score);
       this.img.removeEventListener("click", this.clickFunction);
       this.img.setAttribute("hidden", true);
@@ -82,6 +82,10 @@ class Game {
     this.timer = null;
     this.character = null;
     this.holes = new Array(18).fill().map((_, index) => new Hole(index));
+    this.totalCaughtCharacters = {};
+    availableCharacters.forEach(
+      (char) => (this.totalCaughtCharacters[char.name] = 0)
+    );
 
     this.startGame();
   }
@@ -93,7 +97,7 @@ class Game {
         return;
       }
 
-      for (let character of characters) {
+      for (let character of availableCharacters) {
         const test = new Character(
           character.name,
           character.displayTimeInSeconds,
@@ -132,15 +136,19 @@ class Game {
     this.createCharacter();
   }
 
-  trackScore(score) {
+  trackScore(score, characterName) {
     this.gameScore += score;
     document.querySelector(".score").innerText = this.gameScore;
+
+    console.log(characterName);
+
+    this.totalCaughtCharacters[characterName]++;
+    console.log(this.totalCaughtCharacters);
   }
 
   showPoints(score) {
     const showPoints = document.querySelector(".points");
     showPoints.removeAttribute("hidden");
-    console.log(score);
     showPoints.setAttribute("src", `./images/${score}.png`);
 
     setTimeout(() => {
@@ -156,6 +164,17 @@ class Game {
 
   showModal() {
     document.querySelector(".finalScore").innerText = this.gameScore;
+
+    const message = Object.entries(this.totalCaughtCharacters).reduce(
+      (accu, [key, value]) => {
+        accu += `${key}: ${value} </br>`;
+        return accu;
+      },
+      ""
+    );
+
+    document.querySelector(".scoreDetails").innerHTML = message;
+
     const myModal = new bootstrap.Modal(document.querySelector(".modal"), {
       keyboard: false,
     });
