@@ -139,8 +139,18 @@ class Game {
   gameOver() {
     button.disabled = false;
     this.holes.forEach((hole) => hole.clearImg());
-
+    this.showModal();
+    // const modal = document.querySelector(".modal");
+    // modal.setAttribute("class", "show");
     // show final socre on the screen
+  }
+
+  showModal() {
+    document.querySelector(".finalScore").innerText = this.gameScore;
+    const myModal = new bootstrap.Modal(document.querySelector(".modal"), {
+      keyboard: false,
+    });
+    myModal.show();
   }
 }
 
