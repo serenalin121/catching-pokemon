@@ -10,12 +10,17 @@ const availableCharacters = [
     score: 1,
   },
   {
-    name: "psyduck",
-    displayTimeInSeconds: 3,
+    name: "charmander",
+    displayTimeInSeconds: 2,
+    score: 2,
+  },
+  {
+    name: "squirtle",
+    displayTimeInSeconds: 1,
     score: 1,
   },
   {
-    name: "eevee",
+    name: "bulbasaur",
     displayTimeInSeconds: 1,
     score: 2,
   },
