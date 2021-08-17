@@ -26,7 +26,7 @@ const availableCharacters = [
   },
   {
     name: "abra",
-    displayTimeInSeconds: 1,
+    displayTimeInSeconds: 0.77,
     score: 3,
   },
 ];
@@ -67,7 +67,7 @@ class Hole {
 
     const clearImg = setTimeout(() => {
       this.clearImg();
-    }, `${character.displayTimeInSeconds}000`);
+    }, character.displayTimeInSeconds * 1000);
   }
 
   clearImg() {
@@ -105,10 +105,13 @@ class Game {
           character.displayTimeInSeconds,
           character.score
         );
-        if (this.gameTime > this.bonusShowTime && character.name === "abra") {
-          return;
+
+        if (
+          (this.gameTime <= this.bonusShowTime && character.name === "abra") ||
+          (this.gameTime > this.bonusShowTime && character.name !== "abra")
+        ) {
+          this.showCharacter(test);
         }
-        this.showCharacter(test);
       }
     }, 700);
   }
