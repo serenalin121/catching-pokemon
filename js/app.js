@@ -1,8 +1,5 @@
 /* 
-   - have a pop up window at the end of the game to show the final socre - modal
-
    - abra pokemon - special character, show up at the last 2s, displaytime really fast
-   - track what user has caught, and number of character
    - restructure 
 */
 
@@ -120,11 +117,18 @@ class Game {
       clearInterval(this.timer);
     }
 
+    const displayTime = document.querySelector(".time");
+
     this.timer = setInterval(() => {
       this.gameTime--;
-      document.querySelector(".time").innerText = this.gameTime;
+      displayTime.innerText = this.gameTime;
+      if (this.gameTime === 5) {
+        displayTime.style.color = "red";
+      }
+
       if (this.gameTime === 0) {
         clearInterval(this.timer);
+        displayTime.style.color = "black";
         this.gameOver();
       }
     }, 1000);
@@ -140,10 +144,7 @@ class Game {
     this.gameScore += score;
     document.querySelector(".score").innerText = this.gameScore;
 
-    console.log(characterName);
-
     this.totalCaughtCharacters[characterName]++;
-    console.log(this.totalCaughtCharacters);
   }
 
   showPoints(score) {
