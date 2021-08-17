@@ -105,17 +105,18 @@ class Game {
         return;
       }
       for (let character of availableCharacters) {
-        const test = new Character(
+        const char = new Character(
           character.name,
           character.displayTimeInSeconds,
           character.score
         );
 
+        // bonus time; only show abra during the bonus time
         if (
           (this.gameTime <= this.bonusShowTime && character.name === "abra") ||
           (this.gameTime > this.bonusShowTime && character.name !== "abra")
         ) {
-          this.showCharacter(test);
+          this.showCharacter(char);
         }
       }
     }, 700);

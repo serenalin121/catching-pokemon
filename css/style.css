@@ -53,3 +53,23 @@ img {
   height: 150px;
   width: 150px;
 }
+
+@media (max-width: 500px) {
+  h1,
+  h2 {
+    margin: 10px;
+  }
+
+  .hole {
+    height: 80px;
+    width: 80px;
+    margin: 5px;
+    background-color: #555;
+    border-radius: 50%;
+    align-items: center;
+  }
+  img {
+    height: 80px;
+    width: 80px;
+  }
+}
