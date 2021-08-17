@@ -24,6 +24,11 @@ const availableCharacters = [
     displayTimeInSeconds: 2,
     score: -1,
   },
+  {
+    name: "abra",
+    displayTimeInSeconds: 1,
+    score: 3,
+  },
 ];
 
 class Character {
@@ -45,6 +50,7 @@ class Hole {
     if (this.isDisplaying) {
       return;
     }
+
     this.img.removeAttribute("hidden");
     this.img.setAttribute("src", `images/${character.name}.png`);
 
@@ -52,8 +58,7 @@ class Hole {
       e.preventDefault();
       game.trackScore(character.score, character.name);
       game.showPoints(character.score);
-      this.img.removeEventListener("click", this.clickFunction);
-      this.img.setAttribute("hidden", true);
+      this.clearImg();
       clearTimeout(clearImg);
     };
 
@@ -75,7 +80,8 @@ class Hole {
 class Game {
   constructor() {
     this.gameScore = 0;
-    this.gameTime = 10;
+    this.gameTime = 30;
+    this.bonusShowTime = 10;
     this.timer = null;
     this.character = null;
     this.holes = new Array(18).fill().map((_, index) => new Hole(index));
@@ -93,16 +99,18 @@ class Game {
         clearInterval(instantiate);
         return;
       }
-
       for (let character of availableCharacters) {
         const test = new Character(
           character.name,
           character.displayTimeInSeconds,
           character.score
         );
+        if (this.gameTime > this.bonusShowTime && character.name === "abra") {
+          return;
+        }
         this.showCharacter(test);
       }
-    }, 1000);
+    }, 700);
   }
 
   showCharacter(character) {
@@ -122,7 +130,7 @@ class Game {
     this.timer = setInterval(() => {
       this.gameTime--;
       displayTime.innerText = this.gameTime;
-      if (this.gameTime === 5) {
+      if (this.gameTime === this.bonusShowTime) {
         displayTime.style.color = "red";
       }
 
