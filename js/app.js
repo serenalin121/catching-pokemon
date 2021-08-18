@@ -48,6 +48,7 @@ class Hole {
   constructor(num) {
     this.isDisplaying = false;
     this.img = document.querySelector(`.hole${num} > .character`);
+    this.holeCircle = document.querySelector(`.hole${num}`);
     this.clickFunction = null;
   }
 
@@ -60,11 +61,13 @@ class Hole {
     this.img.setAttribute("src", `images/${character.name}.png`);
 
     this.clickFunction = (e) => {
+      this.holeCircle.style.border = "7px solid gold";
       e.preventDefault();
       game.trackScore(character.score, character.name);
       game.showPoints(character.score);
       this.clearImg();
       clearTimeout(clearImg);
+      clearCircle();
     };
 
     this.img.addEventListener("click", this.clickFunction);
@@ -73,6 +76,11 @@ class Hole {
     const clearImg = setTimeout(() => {
       this.clearImg();
     }, character.displayTimeInSeconds * 1000);
+
+    const clearCircle = () =>
+      setTimeout(() => {
+        this.holeCircle.style.border = "";
+      }, 200);
   }
 
   clearImg() {
