@@ -28,13 +28,13 @@ Playing View (when Player caught a bomb)
 ## User Stories
 
 ### MVP Goals
-As a player, I would like to be informed when I catch a bomb.
-As a player, I would like to know if I successfully catch a pokemon or not.
-As a player, I would like to see the time counting down and score on the same screen.
-As a player, I would like to be informed when the game is over.
-As a player, I would like to be informed of my final score when the game is over.
-As a player, I would like to be able to restart the game without refresh the page.
+- As a player, I would like to be informed when I catch a bomb.
+- As a player, I would like to know if I successfully catch a pokemon or not.
+- As a player, I would like to see the time counting down and score on the same screen.
+- As a player, I would like to be informed when the game is over.
+- As a player, I would like to be informed of my final score when the game is over.
+- As a player, I would like to be able to restart the game without refresh the page.
 
 ### Stretch Goals
-Randomized each character's display time.
-Adding some rare Pokémon with shorter display time. If the player successfully catches it, they can get a higher score.
+- Randomized each character's display time.
+- Adding some rare Pokémon with shorter display time. If the player successfully catches it, they can get a higher score.
