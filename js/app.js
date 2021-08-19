@@ -1,8 +1,3 @@
-/* 
-   - abra pokemon - special character, show up at the last 2s, displaytime really fast
-   - restructure 
-*/
-
 const availableCharacters = [
   {
     name: "pikachu",
@@ -57,58 +52,72 @@ class Hole {
       return;
     }
 
-    this.img.removeAttribute("hidden");
-    this.img.setAttribute("src", `images/${character.name}.png`);
-
-    this.clickFunction = (e) => {
-      this.holeCircle.style.border = "7px solid gold";
-      e.preventDefault();
-      game.trackScore(character.score, character.name);
-      game.showPoints(character.score);
-      this.clearImg();
-      clearTimeout(clearImg);
-      clearCircle();
-    };
-
+    this._showCharacterInHole(character.name);
+    this._setClickFunction(character, game);
     this.img.addEventListener("click", this.clickFunction);
     this.isDisplaying = true;
-
-    const clearImg = setTimeout(() => {
-      this.clearImg();
-    }, character.displayTimeInSeconds * 1000);
-
-    const clearCircle = () =>
-      setTimeout(() => {
-        this.holeCircle.style.border = "";
-      }, 200);
+    this._clearImgTimeout(character.displayTimeInSeconds);
   }
 
-  clearImg() {
+  _setClickFunction(character, game) {
+    this.clickFunction = (e) => {
+      e.preventDefault();
+      this.holeCircle.style.border = "7px solid gold";
+      game.trackScore(character.score, character.name);
+      game.showPoints(character.score);
+
+      // clear character image on click
+      this._clearImg();
+      clearTimeout(this._clearImgTimeout(character.displayTimeInSeconds));
+
+      this._clearCircle();
+    };
+  }
+
+  _showCharacterInHole(characterName) {
+    this.img.removeAttribute("hidden");
+    this.img.setAttribute("src", `images/${characterName}.png`);
+  }
+
+  _clearCircle() {
+    setTimeout(() => {
+      this.holeCircle.style.border = "";
+    }, 200);
+  }
+
+  _clearImg() {
     this.img.setAttribute("hidden", true);
     this.isDisplaying = false;
     this.img.removeEventListener("click", this.clickFunction);
+  }
+
+  // clear character image after their display time
+  _clearImgTimeout(characterDisplayTimeInSeconds) {
+    setTimeout(() => {
+      this._clearImg();
+    }, characterDisplayTimeInSeconds * 1000);
   }
 }
 
 class Game {
   constructor() {
     this.gameScore = 0;
-    this.gameTime = 30;
+    this.gameTimeLeft = 30;
     this.bonusShowTime = 10;
     this.timer = null;
     this.character = null;
     this.holes = new Array(18).fill().map((_, index) => new Hole(index));
-    this.totalCaughtCharacters = {};
-    availableCharacters.forEach(
-      (char) => (this.totalCaughtCharacters[char.name] = 0)
-    );
+    this.totalCaughtCharacters = availableCharacters.reduce((acc, curr) => {
+      acc[curr.name] = 0;
+      return acc;
+    }, {});
 
     this.startGame();
   }
 
   createCharacter() {
     const instantiate = setInterval(() => {
-      if (this.gameTime === 0) {
+      if (this.gameTimeLeft === 0) {
         clearInterval(instantiate);
         return;
       }
@@ -121,8 +130,9 @@ class Game {
 
         // bonus time; only show abra during the bonus time
         if (
-          (this.gameTime <= this.bonusShowTime && character.name === "abra") ||
-          (this.gameTime > this.bonusShowTime && character.name !== "abra")
+          (this.gameTimeLeft <= this.bonusShowTime &&
+            character.name === "abra") ||
+          (this.gameTimeLeft > this.bonusShowTime && character.name !== "abra")
         ) {
           this.showCharacter(char);
         }
@@ -145,13 +155,13 @@ class Game {
     const displayTime = document.querySelector(".time");
 
     this.timer = setInterval(() => {
-      this.gameTime--;
-      displayTime.innerText = this.gameTime;
-      if (this.gameTime === this.bonusShowTime) {
+      this.gameTimeLeft--;
+      displayTime.innerText = this.gameTimeLeft;
+      if (this.gameTimeLeft === this.bonusShowTime) {
         displayTime.style.color = "red";
       }
 
-      if (this.gameTime === 0) {
+      if (this.gameTimeLeft === 0) {
         clearInterval(this.timer);
         displayTime.style.color = "black";
         this.gameOver();
@@ -184,13 +194,14 @@ class Game {
 
   gameOver() {
     button.disabled = false;
-    this.holes.forEach((hole) => hole.clearImg());
+    this.holes.forEach((hole) => hole._clearImg());
     this.showModal();
   }
 
   showModal() {
     document.querySelector(".finalScore").innerText = this.gameScore;
 
+    // create message from totalCaughtCharacters object
     const message = Object.entries(this.totalCaughtCharacters).reduce(
       (accu, [key, value]) => {
         accu += `${key}: ${value} </br>`;
@@ -201,9 +212,7 @@ class Game {
 
     document.querySelector(".scoreDetails").innerHTML = message;
 
-    const myModal = new bootstrap.Modal(document.querySelector(".modal"), {
-      keyboard: false,
-    });
+    const myModal = new bootstrap.Modal(document.querySelector(".modal"));
     myModal.show();
   }
 }

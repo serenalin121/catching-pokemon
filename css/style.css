@@ -54,7 +54,7 @@ img {
   width: 150px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   h1,
   h2 {
     margin: 10px;
