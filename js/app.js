@@ -104,7 +104,7 @@ class Game {
     this.gameScore = 0;
     this.gameTimeLeft = 30;
     this.bonusShowTime = 10;
-    this.timer = null;
+    this.countDownIntervalTimer = null;
     this.character = null;
     this.holes = new Array(18).fill().map((_, index) => new Hole(index));
     this.totalCaughtCharacters = availableCharacters.reduce((acc, curr) => {
@@ -116,6 +116,8 @@ class Game {
   }
 
   createCharacter() {
+    const CREATE_CHARACTER_INTERVAL_MS = 700;
+
     const instantiate = setInterval(() => {
       if (this.gameTimeLeft === 0) {
         clearInterval(instantiate);
@@ -137,7 +139,7 @@ class Game {
           this.showCharacter(char);
         }
       }
-    }, 700);
+    }, CREATE_CHARACTER_INTERVAL_MS);
   }
 
   showCharacter(character) {
@@ -148,13 +150,13 @@ class Game {
 
   countDown() {
     // make sure only one timer running at a time
-    if (this.timer) {
-      clearInterval(this.timer);
+    if (this.countDownIntervalTimer) {
+      clearInterval(this.countDownIntervalTimer);
     }
 
     const displayTime = document.querySelector(".time");
 
-    this.timer = setInterval(() => {
+    this.countDownIntervalTimer = setInterval(() => {
       this.gameTimeLeft--;
       displayTime.innerText = this.gameTimeLeft;
       if (this.gameTimeLeft === this.bonusShowTime) {
@@ -162,7 +164,7 @@ class Game {
       }
 
       if (this.gameTimeLeft === 0) {
-        clearInterval(this.timer);
+        clearInterval(this.countDownIntervalTimer);
         displayTime.style.color = "black";
         this.gameOver();
       }
@@ -182,14 +184,15 @@ class Game {
     this.totalCaughtCharacters[characterName]++;
   }
 
-  showPoints(score) {
+  showCaughtCharacterScore(score) {
     const showPoints = document.querySelector(".points");
     showPoints.removeAttribute("hidden");
     showPoints.setAttribute("src", `./images/${score}.png`);
+    const HIDE_SCORE_DELAY_MS = 400;
 
     setTimeout(() => {
       showPoints.setAttribute("hidden", true);
-    }, 400);
+    }, HIDE_SCORE_DELAY_MS);
   }
 
   gameOver() {
