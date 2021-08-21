@@ -64,7 +64,7 @@ class Hole {
       e.preventDefault();
       this.holeCircle.style.border = "7px solid gold";
       game.trackScore(character.score, character.name);
-      game.showPoints(character.score);
+      game.showCaughtCharacterScore(character.score);
 
       // clear character image on click
       this._clearImg();
